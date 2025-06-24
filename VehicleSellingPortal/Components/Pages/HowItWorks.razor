@@ -1,0 +1,62 @@
+﻿@page "/how-it-works"
+@rendermode InteractiveServer
+
+<section class="container my-5">
+    <div class="row align-items-center">
+        <!-- Left Column: Headline, Paragraphs, Button -->
+        <div class="col-md-6 mb-4">
+            <h2 class="fw-bold mb-4">How It Works</h2>
+            <p>Browse thousands of vehicles across multiple categories and filter them based on your preferences.</p>
+            <p>Compare pricing, view history, and schedule test drives — all from the comfort of your home.</p>
+            <p>Once you're ready, register and complete your purchase process seamlessly.</p>
+            <button class="btn btn-primary mt-3">Search Inventory</button>
+        </div>
+
+        <!-- Right Column: 2x2 Image Grid -->
+        <div class="col-md-6">
+            <div class="row g-3">
+                <div class="col-6">
+                    <img src="images/step1.png" class="img-fluid rounded shadow-sm" alt="Step 1" />
+                </div>
+                <div class="col-6">
+                    <img src="images/step2.png" class="img-fluid rounded shadow-sm" alt="Step 2" />
+                </div>
+                <div class="col-6">
+                    <img src="images/step3.png" class="img-fluid rounded shadow-sm" alt="Step 3" />
+                </div>
+                <div class="col-6">
+                    @* Empty for layout symmetry *@
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- After You’ve Registered Section -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h3 class="fw-semibold mb-4">After You’ve Registered</h3>
+        <div class="row text-center g-4">
+            <div class="col-md-2 col-6">
+                <i class="bi bi-person-check fs-2 text-primary"></i>
+                <p class="mt-2 mb-0">Membership</p>
+            </div>
+            <div class="col-md-2 col-6">
+                <i class="bi bi-card-image fs-2 text-success"></i>
+                <p class="mt-2 mb-0">Upload Licence</p>
+            </div>
+            <div class="col-md-2 col-6">
+                <i class="bi bi-search-heart fs-2 text-danger"></i>
+                <p class="mt-2 mb-0">Search & Save</p>
+            </div>
+            <div class="col-md-2 col-6">
+                <i class="bi bi-tags fs-2 text-warning"></i>
+                <p class="mt-2 mb-0">Explore Offers</p>
+            </div>
+            <div class="col-md-2 col-6">
+                <i class="bi bi-truck fs-2 text-info"></i>
+                <p class="mt-2 mb-0">Get It Delivered</p>
+            </div>
+        </div>
+    </div>
+</section>

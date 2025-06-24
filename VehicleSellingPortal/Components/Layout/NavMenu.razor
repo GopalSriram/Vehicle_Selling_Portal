@@ -1,0 +1,51 @@
+﻿@* NavMenu.razor *@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+    <a class="navbar-brand" href="/">Vehicle Selling Portal</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ms-auto">
+
+            <li class="nav-item"></li>
+
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/how-it-works">How it Works</NavLink>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="vehiclesDropdown" role="button" data-bs-toggle="dropdown">
+                    Find Vehicles
+                </a>
+                <ul class="dropdown-menu">
+                    <li><NavLink class="dropdown-item" href="/vehicle-finder">Vehicle Finder</NavLink></li>
+                    <li><NavLink class="dropdown-item" href="/sales-list">Sales List</NavLink></li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="offersDropdown" role="button" data-bs-toggle="dropdown">
+                    Offers
+                </a>
+                <ul class="dropdown-menu">
+                    <NavLink class="dropdown-item" href="/current-offers">Current Offers</NavLink>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/locations">Locations</NavLink>
+            </li>
+
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/sell-vehicle">Sell a Vehicle</NavLink>
+            </li>
+
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/support">Services & Support</NavLink>
+            </li>
+
+        </ul>
+    </div>
+</nav>

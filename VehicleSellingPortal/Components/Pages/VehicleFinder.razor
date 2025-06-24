@@ -1,0 +1,133 @@
+﻿@page "/vehicle-finder"
+@rendermode InteractiveServer
+@using VehicleSellingPortal.Application.Contracts.Persistance
+@using VehicleSellingPortal.Domain.Entities
+
+@inject IVehicleRepository VehicleRepo
+
+<h2 class="mb-4">Search Inventory</h2>
+
+<!-- Filters -->
+<div class="row mb-4 g-3">
+    <div class="col-md-2">
+        <input class="form-control" placeholder="Make" @bind="makeFilter" />
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" placeholder="Model" @bind="modelFilter" />
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" type="number" placeholder="Year" @bind="yearFilter" />
+    </div>
+    <div class="col-md-3">
+        <select class="form-select" @bind="damageStatusFilter">
+            <option value="">All Damage Status</option>
+            <option value="0">None</option>
+            <option value="1">Minor</option>
+            <option value="2">Moderate</option>
+            <option value="3">Major</option>
+            <option value="4">Total Loss</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <input class="form-control" placeholder="Location" @bind="locationFilter" />
+    </div>
+</div>
+
+<!-- Sort Options -->
+<div class="d-flex justify-content-end mb-3">
+    <select class="form-select w-auto" @bind="sortBy">
+        <option value="year">Sort by Year</option>
+        <option value="mileage">Sort by Odometer</option>
+        <option value="availableDate">Sort by Available Date</option>
+    </select>
+</div>
+
+<!-- Vehicle Cards Grid -->
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var vehicle in PagedVehicles)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <img src="@vehicle.ImageUrl" class="card-img-top" alt="@vehicle.Name" />
+                <div class="card-body">
+                    <h5 class="card-title">@vehicle.Make @vehicle.Model (@vehicle.Year)</h5>
+                    <p class="card-text">
+                        <strong>Damage:</strong> @vehicle.DamageStatus<br />
+                        <strong>Mileage:</strong> @vehicle.Mileage km<br />
+                        <strong>Location:</strong> @vehicle.Location
+                    </p>
+                   @*  <NavLink class="btn btn-outline-primary" href="/vehicle/@vehicle.Id">View Details</NavLink> *@
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-center mt-4">
+    <button class="btn btn-outline-secondary me-2" @onclick="PreviousPage" disabled="@IsFirstPage">Previous</button>
+    <button class="btn btn-outline-secondary" @onclick="NextPage" disabled="@IsLastPage">Next</button>
+</div>
+
+@code {
+    private List<Vehicle> allVehicles = new();
+    private string? makeFilter, modelFilter, locationFilter, damageStatusFilter;
+    private int? yearFilter;
+    private string sortBy = "year";
+
+    private int pageSize = 6;
+    private int currentPage = 1;
+
+    private IEnumerable<Vehicle> PagedVehicles => ApplyFiltersAndSorting()
+        .Skip((currentPage - 1) * pageSize)
+        .Take(pageSize);
+
+    private bool IsFirstPage => currentPage == 1;
+    private bool IsLastPage => (currentPage * pageSize) >= ApplyFiltersAndSorting().Count();
+
+    protected override async Task OnInitializedAsync()
+    {
+        allVehicles = await VehicleRepo.GetAllAsync();
+    }
+
+    private IEnumerable<Vehicle> ApplyFiltersAndSorting()
+    {
+        IEnumerable<Vehicle> query = allVehicles;
+
+        if (!string.IsNullOrWhiteSpace(makeFilter))
+            query = query.Where(v => v.Make.Contains(makeFilter, StringComparison.OrdinalIgnoreCase));
+
+        if (!string.IsNullOrWhiteSpace(modelFilter))
+            query = query.Where(v => v.Model.Contains(modelFilter, StringComparison.OrdinalIgnoreCase));
+
+        if (yearFilter.HasValue)
+            query = query.Where(v => v.Year == yearFilter);
+
+        if (!string.IsNullOrWhiteSpace(damageStatusFilter))
+            query = query.Where(v => ((int)v.DamageStatus).ToString() == damageStatusFilter);
+
+        if (!string.IsNullOrWhiteSpace(locationFilter))
+            query = query.Where(v => v.Location.Contains(locationFilter, StringComparison.OrdinalIgnoreCase));
+
+        query = sortBy switch
+        {
+            "mileage" => query.OrderBy(v => v.Mileage),
+            "availableDate" => query.OrderBy(v => v.AvailableDate),
+            _ => query.OrderByDescending(v => v.Year),
+        };
+
+        return query;
+    }
+
+    private void NextPage()
+    {
+        if (!IsLastPage)
+            currentPage++;
+    }
+
+    private void PreviousPage()
+    {
+        if (!IsFirstPage)
+            currentPage--;
+    }
+}

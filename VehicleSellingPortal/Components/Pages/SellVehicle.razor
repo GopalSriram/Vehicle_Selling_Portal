@@ -1,0 +1,71 @@
+﻿@page "/sell-vehicle"
+@using VehicleSellingPortal.Application.Contracts.Persistance
+@using VehicleSellingPortal.Domain.Entities
+@inject IVehicleRepository VehicleRepo
+@inject NavigationManager Navigation
+
+<h2 class="mb-4">Sell Your Vehicle</h2>
+
+@if (successMessage != null)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+<EditForm Model="vehicle" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <InputText class="form-control" @bind-Value="vehicle.Name" placeholder="Vehicle Name" />
+        </div>
+        <div class="col-md-6">
+            <InputText class="form-control" @bind-Value="vehicle.Make" placeholder="Make" />
+        </div>
+        <div class="col-md-6">
+            <InputText class="form-control" @bind-Value="vehicle.Model" placeholder="Model" />
+        </div>
+        <div class="col-md-6">
+            <InputNumber class="form-control" @bind-Value="vehicle.Year" placeholder="Year" />
+        </div>
+        <div class="col-md-6">
+            <InputNumber class="form-control" @bind-Value="vehicle.Mileage" placeholder="Mileage" />
+        </div>
+        <div class="col-md-6">
+            <InputText class="form-control" @bind-Value="vehicle.Location" placeholder="Location" />
+        </div>
+        <div class="col-md-6">
+            <InputDate class="form-control" @bind-Value="vehicle.AvailableDate" />
+        </div>
+        <div class="col-md-6">
+            <InputText class="form-control" @bind-Value="vehicle.ImageUrl" placeholder="Image URL" />
+        </div>
+        <div class="col-md-12">
+            <label>Damage Status</label>
+            <InputSelect class="form-select" @bind-Value="vehicle.DamageStatus">
+                <option value="0">None</option>
+                <option value="1">Minor</option>
+                <option value="2">Moderate</option>
+                <option value="3">Major</option>
+                <option value="4">Total Loss</option>
+            </InputSelect>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Submit Vehicle</button>
+</EditForm>
+
+@code {
+    private Vehicle vehicle = new()
+        {
+            AvailableDate = DateTime.Today
+        };
+    private string? successMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        await VehicleRepo.AddAsync(vehicle);
+        successMessage = "Your vehicle has been submitted successfully!";
+        vehicle = new Vehicle { AvailableDate = DateTime.Today }; // reset form
+    }
+}

@@ -1,0 +1,36 @@
+﻿@page "/"
+
+@* Hero / Inventory Banner *@
+<div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-inner position-relative">
+        <div class="carousel-item active">
+            <img src="images/Sedan.jpg" class="d-block w-100" alt="Vehicle 1">
+        </div>
+        <div class="carousel-item">
+            <img src="images/SUV.jpg" class="d-block w-100" alt="Vehicle 2">
+        </div>
+        <div class="carousel-item">
+            <img src="images/Truck.png" class="d-block w-100" alt="Vehicle 3">
+        </div>
+
+        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-4">
+            <h1 class="display-5 fw-bold text-white">Find Your Next Ride</h1>
+            <p class="lead text-light">Explore bank repossessed and damaged vehicles at unbeatable prices.</p>
+            <div class="d-flex justify-content-center gap-3 mt-3">
+                <NavLink class="btn btn-primary" href="/bank-repossessed">Bank Repossessed Vehicles</NavLink>
+                <NavLink class="btn btn-danger" href="/damaged-vehicles">Damaged Vehicles</NavLink>
+            </div>
+        </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</div>
+
+
+
+

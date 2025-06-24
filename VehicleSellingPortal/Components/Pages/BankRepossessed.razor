@@ -1,0 +1,46 @@
+﻿@page "/bank-repossessed"
+@using VehicleSellingPortal.Application.Contracts.Persistance
+@using VehicleSellingPortal.Domain.Entities
+@inject IVehicleRepository VehicleRepo
+
+<h2 class="mb-4">Bank Repossessed Vehicles</h2>
+
+@if (repossessedVehicles.Count == 0)
+{
+    <div class="alert alert-warning">No bank repossessed vehicles available at the moment.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var vehicle in repossessedVehicles)
+        {
+            <div class="col">
+                <div class="card h-100 border-info">
+                    <img src="@vehicle.ImageUrl" class="card-img-top" alt="@vehicle.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@vehicle.Make @vehicle.Model (@vehicle.Year)</h5>
+                        <p class="card-text">
+                            <strong>Damage:</strong> @vehicle.DamageStatus<br />
+                            <strong>Mileage:</strong> @vehicle.Mileage km<br />
+                            <strong>Location:</strong> @vehicle.Location
+                        </p>
+                        <span class="badge bg-info text-dark">Bank Repossessed</span><br />
+                        @*  <NavLink class="btn btn-outline-primary mt-2" href=$"/vehicle/{vehicle.Id}">View Details</NavLink> *@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Vehicle> repossessedVehicles = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var allVehicles = await VehicleRepo.GetAllAsync();
+        repossessedVehicles = allVehicles
+        .Where(v => v.IsRepossessed)
+        .ToList();
+    }
+}

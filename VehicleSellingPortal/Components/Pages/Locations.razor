@@ -1,0 +1,48 @@
+﻿@page "/locations"
+@using VehicleSellingPortal.Application.Contracts.Persistance
+@using VehicleSellingPortal.Domain.Entities
+@inject IVehicleRepository VehicleRepo
+
+<h2 class="mb-4">Our Locations</h2>
+
+@if (locationGroups.Count == 0)
+{
+    <div class="alert alert-info">No vehicle locations available right now.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var group in locationGroups)
+        {
+            <div class="col">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">@group.Key</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var vehicle in group)
+                        {
+                            <li class="list-group-item">
+                                <strong>@vehicle.Make @vehicle.Model</strong> (@vehicle.Year) - @vehicle.Mileage km
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Vehicle> allVehicles = new();
+    private List<IGrouping<string, Vehicle>> locationGroups = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        allVehicles = await VehicleRepo.GetAllAsync();
+        locationGroups = allVehicles
+            .GroupBy(v => v.Location)
+            .OrderBy(g => g.Key)
+            .ToList();
+    }
+}

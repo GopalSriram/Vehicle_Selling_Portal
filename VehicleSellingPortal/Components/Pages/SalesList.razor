@@ -1,0 +1,56 @@
+﻿@page "/sales-list"
+@using Microsoft.AspNetCore.Components.Authorization
+@using VehicleSellingPortal.Application.Contracts.Persistance
+@using VehicleSellingPortal.Domain.Entities
+@inject IJSRuntime JS
+@inject IVehicleRepository VehicleRepo
+@inject IWatchlistService WatchlistService
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h2 class="mb-4">My Watchlist</h2>
+
+@if (watchlist.Count == 0)
+{
+    <div class="alert alert-info">You haven't added any vehicles to your watchlist yet.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var vehicle in watchlist)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@vehicle.ImageUrl" class="card-img-top" alt="@vehicle.Name" />
+                    <div class="card-body">
+                        <h5 class="card-title">@vehicle.Make @vehicle.Model (@vehicle.Year)</h5>
+                        <p class="card-text">
+                            <strong>Damage:</strong> @vehicle.DamageStatus<br />
+                            <strong>Mileage:</strong> @vehicle.Mileage km<br />
+                            <strong>Location:</strong> @vehicle.Location
+                        </p>
+                       @*  <NavLink class="btn btn-outline-primary" href=$"/vehicle/{vehicle.Id}">View Details</NavLink> *@
+                        <button class="btn btn-sm btn-outline-danger ms-2" @onclick="() => RemoveFromWatchlist(vehicle.Id)">Remove</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Vehicle> watchlist = new();
+    private string userId = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        userId = authState.User.Identity?.Name ?? "guest";
+        watchlist = await WatchlistService.GetWatchlistAsync("103");
+    }
+
+    private async Task RemoveFromWatchlist(int id)
+    {
+        await WatchlistService.RemoveFromWatchlistAsync(userId, id);
+        watchlist = await WatchlistService.GetWatchlistAsync(userId);
+    }
+}

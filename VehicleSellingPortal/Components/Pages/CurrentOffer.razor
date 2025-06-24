@@ -1,0 +1,47 @@
+﻿@page "/current-offers"
+@using VehicleSellingPortal.Application.Contracts.Persistance
+@using VehicleSellingPortal.Domain.Entities
+@inject IVehicleRepository VehicleRepo
+
+<h2 class="mb-4">Current Offers</h2>
+
+@if (vehiclesWithOffers.Count == 0)
+{
+    <div class="alert alert-info">There are currently no vehicles on offer.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var vehicle in vehiclesWithOffers)
+        {
+            <div class="col">
+                <div class="card h-100 border-success">
+                    <img src="@vehicle.ImageUrl" class="card-img-top" alt="@vehicle.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@vehicle.Make @vehicle.Model (@vehicle.Year)</h5>
+                        <p class="card-text">
+                            <strong>Damage:</strong> @vehicle.DamageStatus<br />
+                            <strong>Mileage:</strong> @vehicle.Mileage km<br />
+                            <strong>Location:</strong> @vehicle.Location<br />
+                            <span class="badge bg-success mt-2">Limited Time Offer!</span>
+                        </p>
+                     @*    <NavLink class="btn btn-outline-primary" href=$"/vehicle/{vehicle.Id}">View Details</NavLink> *@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Vehicle> vehiclesWithOffers = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Example: vehicles with low mileage or recent year are considered offers.
+        var allVehicles = await VehicleRepo.GetAllAsync();
+        vehiclesWithOffers = allVehicles
+            .Where(v => v.Mileage < 50000 || v.Year >= DateTime.Now.Year - 1)
+            .ToList();
+    }
+}
